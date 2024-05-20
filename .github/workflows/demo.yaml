@@ -1,0 +1,32 @@
+name: Generate PlantUML Diagrams
+
+on:
+  push:
+    paths:
+      - '**/*.puml'
+
+jobs:
+  generate-diagrams:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+           github-server-url: http://localhost:3000
+
+      - name: Generate Diagrams
+        run: |
+          mkdir diagrams || true
+          for file in $(find . -name "*.puml"); do
+            curl -X POST --data-binary @$file https://www.gdoeppert.de/plantuml/svg -o diagrams/$(basename ${file%.puml}).svg
+          done
+          ls -l diagrams          
+
+      - name: Commit Diagrams
+        run: |
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git add diagrams
+            git commit -m "Generate PlantUML diagrams"
+            git push            
