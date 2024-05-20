@@ -1,5 +1,5 @@
 @startuml
 Bob -> Alice : hello world!
 Alice -> Charlie: Bad guay!
-Alice -> Bob: thanks
+Alice -> Bob: thanks.
 @enduml
